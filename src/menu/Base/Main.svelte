@@ -383,7 +383,7 @@
         </div>
 
         <div class="menu-footer">
-            <span class="footer-brand">Venom - Menu</span>
+            <span class="footer-brand">Molly - Menu</span>
             <span class="footer-counter">
                 {selectableMenu.length ? counterCurrent() : 0}/{selectableMenu.length}
             </span>
