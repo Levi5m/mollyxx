@@ -20,7 +20,7 @@
     let MIN_THUMB = 100;
 
     let itemRefs: HTMLElement[] = [];
-    let banner: string = 'https://r2.fivemanage.com/Z8B50VjDrkoAUPTQqy96i/4671a49bb8dbd061986d53c51832e7dc.jpg';
+    let banner: string = 'https://i.ibb.co/rGRwhV4p/molly.png';
 
     let selectableMenu: any[] = [];
     let selectableIndices: number[] = [];
