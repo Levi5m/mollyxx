@@ -51,7 +51,7 @@
                     <div class="input-header-inner">
                         <!-- <span>I</span>
                         <div class="input-divider"></div> -->
-                        <div class="input-header-text">Venom Menu - {setTitle}</div>
+                        <div class="input-header-text">Molly Menu - {setTitle}</div>
                     </div>
                 </div>
                 <input type="text" bind:this={inputEl} bind:value={setValue} />
