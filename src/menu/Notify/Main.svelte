@@ -63,8 +63,8 @@
     });
 
     if (isEnvBrowser()) {
-        notify('Success', 'You have successfully loaded Venom Menu, welcome!', 4000, 'success');
-        notify('Info', 'Your license will never expire, thanks for using Venom Menu.', 4000, 'info');
+        notify('Success', 'You have successfully loaded Molly Menu, welcome!', 4000, 'success');
+        notify('Info', 'Your license will never expire, thanks for using Molly Menu.', 4000, 'info');
         notify('Error', 'Loaded Staff/Developer Modules!', 4000, 'error');
     }
 </script>
