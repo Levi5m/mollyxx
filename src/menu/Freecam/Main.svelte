@@ -59,8 +59,6 @@
     });
 
     onMount(() => {
-        // ===== Molly Freecam Hooks =====
-        // Define as actual functions on window — bypasses Svelte's reactive wrapping
         const win = window as any;
 
         win.setFreecamOptions = function(options: any[]) {
@@ -97,23 +95,45 @@
         };
 
         win.crosshair = {
-            show: function() { 
-                // crosshair is rendered alongside the list; no separate state
-            },
-            hide: function() { 
-                // no-op
-            }
+            show: function() { },
+            hide: function() { }
         };
 
         console.log("[MOLLY] Freecam hooks installed. typeof setFreecamOptions =", typeof win.setFreecamOptions);
-
-        return () => {
-            // Cleanup on unmount (usually not needed for DUI)
-            delete win.setFreecamOptions;
-            delete win.setFreecamSelected;
-            delete win.updateFreecamOption;
-            delete win.hoveringText;
-            delete win.crosshair;
-        };
     });
 </script>
+
+<main>
+    {#if showFreecam}
+        <div in:fly={{ y: 8, duration: 350 }} out:fly={{ y: 8, duration: 350 }} class="hovering-text-wrap">
+            <ul class="hovering-text-list" style="-webkit-mask-image: linear-gradient(transparent 0%, black 0%, black 95%, transparent 100%);">
+                {#each setOptions as option, i}
+                    <li bind:this={setItemRefs[i]} style="color: white;" class="hovering-text-item {i === setHoverd ? 'hovering-text-selected' : 'hovering-text-inactive'}" data-id={option.label?.toLowerCase().replace(/\s+/g, '_')} data-data={option.label} id="hovering-text-opt-{i}" aria-current={i === setHoverd ? 'true' : 'false'}>
+                        {#if i === setHoverd && option.label === 'Spawn Car'}
+                            <span style="color: #fff;">-</span>
+                            {option.label} (<span style="color: rgba(197, 34, 34);">{setVehicleList[vehicleIndex]}</span>)
+                            <span style="color: #fff;">-</span>
+                        {:else if i === setHoverd && option.label === 'Shoot Weapon'}
+                            <span style="color: #fff;">-</span>
+                            {option.label} (<span style="color: rgba(197, 34, 34);">{setWeaponList[weaponIndex]}</span>)
+                            <span style="color: #fff;">-</span>
+                        {:else if i === setHoverd}
+                            <span style="color: #fff;">-</span>
+                            <span style="color: rgba(197, 34, 34);">{option.name || option.label}</span>
+                            {#if option.data}<span style="color: #fff;">{option.data}</span>{/if}
+                            <span style="color: #fff;">-</span>
+                        {:else}
+                            <span style="color: #fff;">{option.name || option.label}</span>
+                            {#if option.data}<span style="color: rgba(150,150,150);"> {option.data}</span>{/if}
+                        {/if}
+                    </li>
+                {/each}
+            </ul>
+        </div>
+
+        <div in:fade={{ duration: 350 }} out:fade={{ duration: 350 }} style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 0.9259vh; height: 0.9259vh; pointer-events: none; z-index: 10000; display: block;">
+            <div style="position: absolute; top: 50%; left: 0px; width: 100%; height: 0.185vh; background-color: white; transform: translateY(-50%);"></div>
+            <div style="position: absolute; left: 50%; top: 0px; width: 0.185vh; height: 100%; background-color: white; transform: translateX(-50%);"></div>
+        </div>
+    {/if}
+</main>
