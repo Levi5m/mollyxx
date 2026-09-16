@@ -1,7 +1,6 @@
 <script lang="ts">
     console.log("[MOLLY] Freecam Main.svelte SCRIPT IS RUNNING");
 
-    import { onMount } from "svelte";
     import { fade, fly } from "svelte/transition";
 
     let showFreecam = false
@@ -12,6 +11,52 @@
     let setVehicleList = ["Dump"];
     let setOptions: any[] = [];
     let setItemRefs: HTMLElement[] = [];
+
+    // ===== Molly Freecam Hooks =====
+    // Set up globals IMMEDIATELY, not in onMount
+    (function setupMollyFreecamHooks() {
+        const win = window as any;
+
+        win.setFreecamOptions = function(options: any[]) {
+            console.log("[MOLLY] setFreecamOptions:", options);
+            showFreecam = true;
+            setOptions = Array.isArray(options) ? [...options] : [];
+        };
+
+        win.setFreecamSelected = function(optionId: string) {
+            console.log("[MOLLY] setFreecamSelected:", optionId);
+            const idx = setOptions.findIndex((o: any) => o.id === optionId);
+            if (idx >= 0) setHoverd = idx;
+        };
+
+        win.updateFreecamOption = function(optionId: string, data: any) {
+            console.log("[MOLLY] updateFreecamOption:", optionId, data);
+            const idx = setOptions.findIndex((o: any) => o.id === optionId);
+            if (idx >= 0) {
+                const copy = [...setOptions];
+                copy[idx] = { ...copy[idx], name: data.name, data: data.data };
+                setOptions = copy;
+            }
+        };
+
+        win.hoveringText = {
+            showList: function() { 
+                console.log("[MOLLY] hoveringText.showList");
+                showFreecam = true; 
+            },
+            hideList: function() { 
+                console.log("[MOLLY] hoveringText.hideList");
+                showFreecam = false; 
+            }
+        };
+
+        win.crosshair = {
+            show: function() { },
+            hide: function() { }
+        };
+
+        console.log("[MOLLY] Freecam hooks installed. typeof setFreecamOptions =", typeof win.setFreecamOptions);
+    })();
 
     $: if (setOptions && setItemRefs.length !== setOptions.length) setItemRefs = Array(setOptions.length);
     $: if (showFreecam && setItemRefs[setHoverd]) {
@@ -58,52 +103,6 @@
                 setHoverd = (setHoverd + 1) % setOptions.length;
             }
         }
-    });
-
-    onMount(() => {
-        console.log("[MOLLY] Freecam onMount running");
-
-        const win = window as any;
-
-        win.setFreecamOptions = function(options: any[]) {
-            console.log("[MOLLY] setFreecamOptions:", options);
-            showFreecam = true;
-            setOptions = Array.isArray(options) ? [...options] : [];
-        };
-
-        win.setFreecamSelected = function(optionId: string) {
-            console.log("[MOLLY] setFreecamSelected:", optionId);
-            const idx = setOptions.findIndex((o: any) => o.id === optionId);
-            if (idx >= 0) setHoverd = idx;
-        };
-
-        win.updateFreecamOption = function(optionId: string, data: any) {
-            console.log("[MOLLY] updateFreecamOption:", optionId, data);
-            const idx = setOptions.findIndex((o: any) => o.id === optionId);
-            if (idx >= 0) {
-                const copy = [...setOptions];
-                copy[idx] = { ...copy[idx], name: data.name, data: data.data };
-                setOptions = copy;
-            }
-        };
-
-        win.hoveringText = {
-            showList: function() { 
-                console.log("[MOLLY] hoveringText.showList");
-                showFreecam = true; 
-            },
-            hideList: function() { 
-                console.log("[MOLLY] hoveringText.hideList");
-                showFreecam = false; 
-            }
-        };
-
-        win.crosshair = {
-            show: function() { },
-            hide: function() { }
-        };
-
-        console.log("[MOLLY] Freecam hooks installed. typeof setFreecamOptions =", typeof win.setFreecamOptions);
     });
 </script>
 
