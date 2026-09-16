@@ -107,7 +107,7 @@
     });
 </script>
 
-<main>
+<div>
     <div id="molly-freecam-root" style="display:none" data-loaded="true"></div>
 
     {#if showFreecam}
@@ -142,4 +142,4 @@
             <div style="position: absolute; left: 50%; top: 0px; width: 0.185vh; height: 100%; background-color: white; transform: translateX(-50%);"></div>
         </div>
     {/if}
-</main>
+</div>
