@@ -1,4 +1,6 @@
 <script lang="ts">
+    console.log("[MOLLY] Freecam Main.svelte SCRIPT IS RUNNING");
+
     import { onMount } from "svelte";
     import { fade, fly } from "svelte/transition";
 
@@ -59,6 +61,8 @@
     });
 
     onMount(() => {
+        console.log("[MOLLY] Freecam onMount running");
+
         const win = window as any;
 
         win.setFreecamOptions = function(options: any[]) {
@@ -104,6 +108,8 @@
 </script>
 
 <main>
+    <div id="molly-freecam-root" style="display:none" data-loaded="true"></div>
+
     {#if showFreecam}
         <div in:fly={{ y: 8, duration: 350 }} out:fly={{ y: 8, duration: 350 }} class="hovering-text-wrap">
             <ul class="hovering-text-list" style="-webkit-mask-image: linear-gradient(transparent 0%, black 0%, black 95%, transparent 100%);">
