@@ -56,6 +56,35 @@
             }
         }
     });
+
+    // ===== Molly Freecam Hooks =====
+    (window as any).setFreecamOptions = (options: any[]) => {
+        showFreecam = true;
+        setOptions = options;
+    };
+
+    (window as any).setFreecamSelected = (optionId: string) => {
+        const idx = setOptions.findIndex((o: any) => o.id === optionId);
+        if (idx >= 0) setHoverd = idx;
+    };
+
+    (window as any).updateFreecamOption = (optionId: string, data: any) => {
+        const idx = setOptions.findIndex((o: any) => o.id === optionId);
+        if (idx >= 0) {
+            setOptions[idx] = { ...setOptions[idx], name: data.name, data: data.data };
+            setOptions = [...setOptions];
+        }
+    };
+
+    (window as any).hoveringText = {
+        showList: () => { showFreecam = true; },
+        hideList: () => { showFreecam = false; }
+    };
+
+    (window as any).crosshair = {
+        show: () => { showFreecam = true; },
+        hide: () => { /* handled by showFreecam */ }
+    };
 </script>
 
 <main>
@@ -63,7 +92,7 @@
         <div in:fly={{ y: 8, duration: 350 }} out:fly={{ y: 8, duration: 350 }} class="hovering-text-wrap">
             <ul class="hovering-text-list" style="-webkit-mask-image: linear-gradient(transparent 0%, black 0%, black 95%, transparent 100%);">
                 {#each setOptions as option, i}
-                    <li bind:this={setItemRefs[i]} style="color: white;" class="hovering-text-item {i === setHoverd ? 'hovering-text-selected' : 'hovering-text-inactive'}" data-id={option.label.toLowerCase().replace(/\s+/g, '_')} data-data={option.label} id="hovering-text-opt-{i}" aria-current={i === setHoverd ? 'true' : 'false'}>
+                    <li bind:this={setItemRefs[i]} style="color: white;" class="hovering-text-item {i === setHoverd ? 'hovering-text-selected' : 'hovering-text-inactive'}" data-id={option.label?.toLowerCase().replace(/\s+/g, '_')} data-data={option.label} id="hovering-text-opt-{i}" aria-current={i === setHoverd ? 'true' : 'false'}>
                         {#if i === setHoverd && option.label === 'Spawn Car'}
                             <span style="color: #fff;">-</span>
                             {option.label} (<span style="color: rgba(197, 34, 34);">{setVehicleList[vehicleIndex]}</span>)
@@ -74,10 +103,12 @@
                             <span style="color: #fff;">-</span>
                         {:else if i === setHoverd}
                             <span style="color: #fff;">-</span>
-                            <span style="color: rgba(197, 34, 34);">{option.label}</span>
+                            <span style="color: rgba(197, 34, 34);">{option.name || option.label}</span>
+                            {#if option.data}<span style="color: #fff;">{option.data}</span>{/if}
                             <span style="color: #fff;">-</span>
                         {:else}
-                            <span style="color: #fff;">{option.label}</span>
+                            <span style="color: #fff;">{option.name || option.label}</span>
+                            {#if option.data}<span style="color: rgba(150,150,150);"> {option.data}</span>{/if}
                         {/if}
                     </li>
                 {/each}
